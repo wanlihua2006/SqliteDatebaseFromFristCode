@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        applicationId "com.lihua.sqlitedatebasefromfristcode"
+        minSdkVersion 22
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            //signingConfig signingConfigs.releaseConfig
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "SqliteDatebaseFromFristCode_${variant.buildType.name}_v${variant.versionName}.apk"
+        }
+    }
+    //禁止png crunching， 禁止构建时默认压缩图片的方法
+    aaptOptions {
+        cruncherEnabled false
+    }
+
+    // dex预处理和最多八线程
+    dexOptions {
+        //   incremental true
+        preDexLibraries true
+        maxProcessCount 8
+    }
+
+    //关闭不需要task
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains("lint")
+                || task.name.contains("Aidl")
+                || task.name.contains("mockableAndroidJar")
+                || task.name.contains("UnintTest")
+                || task.name.contains("AndroidTest")
+                || task.name.contains("Ndk")
+                || task.name.contains("Jni")
+        ) {
+            task.enabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
